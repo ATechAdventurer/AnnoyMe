@@ -43,6 +43,7 @@ app.post("/", csrfProtection, (req, res) => {
     if(message > 255){
         message = message.slice(0,254);
     }
+    console.log("Message Recived", message, name, volume);
     que.push({message, volume, name});
     
     
