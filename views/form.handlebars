@@ -10,13 +10,16 @@
                     <!-- to error: add class "has-danger" -->
                     <div class="form-group">
                         <label for="inputEmail">Message</label>
-                        <textarea type="textarea" name="message" class="form-control form-control-sm" id="inputEmail"
-                            aria-describedby="emailHelp"></textarea>
+                        <textarea type="textarea" name="message" class="form-control form-control-sm" id="inputEmail"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="inputVolume">Volume</label>
                         <input type="range" name="volume" class="custom-range"
                             id="inputVolume" min="1" max="11" />
+                    </div>
+                    <div class="form-group">
+                        <label for="inputName">Name (Optional)</label>
+                        <input type="text" class="form-control form-control-sm" id="inputName" name="name"/>
                     </div>
                     <input hidden="true" name="_csrf" value="{{csrfToken}}"/>
                     <button type="submit" class="btn btn-primary btn-block">Send the message</button>

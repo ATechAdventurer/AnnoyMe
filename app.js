@@ -39,14 +39,11 @@ app.post("/", csrfProtection, (req, res) => {
     if (!req.body.message) {
         return;
     }
-    let { message, volume } = req.body;
+    let { message, volume = 5, name = "None Provided" } = req.body;
     if(message > 255){
         message = message.slice(0,254);
     }
-    if(!volume){
-        volume = 5;
-    }
-    que.push({message, volume, ip: req.hostname});
+    que.push({message, volume, name});
     
     
     
@@ -57,7 +54,7 @@ app.listen(process.env.PORT || 3000, () => {
 });
 
 
-function sendMessage({message, volume, ip}) {
+function sendMessage({message, volume, name}) {
     try{
     var unirest = require('unirest');
     var req = unirest('POST', `${HA_URL}/api/states/sensor.annoying_message`)
@@ -70,7 +67,7 @@ function sendMessage({message, volume, ip}) {
                 state: message,
                 last_updated: new Date().toISOString(),
                 attributes: {
-                    ip,
+                    name,
                     volume
                 }
                 
