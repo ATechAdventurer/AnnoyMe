@@ -1,0 +1,26 @@
+<div class="global-container">
+    <div class="card login-form">
+        <div class="card-body">
+            <h3 class="card-title text-center">Annoy Me</h3>
+            <div class="card-text">
+
+                <!--<div class="alert alert-danger alert-dismissible fade show" role="alert">Incorrect username or password.</div>-->
+                <form action="/" method="POST">
+                    <!-- to error: add class "has-danger" -->
+                    <div class="form-group">
+                        <label for="inputEmail">Message</label>
+                        <textarea type="textarea" name="message" class="form-control form-control-sm" id="inputEmail"
+                            aria-describedby="emailHelp"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputVolume">Volume</label>
+                        <input type="range" name="volume" class="form-control form-control-sm custom-range"
+                            id="inputVolume" min="1" max="11" />
+                    </div>
+                    <input hidden="true" name="_csrf" value="{{csrfToken}}"/>
+                    <button type="submit" class="btn btn-primary btn-block">Send the message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
