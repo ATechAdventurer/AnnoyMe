@@ -64,7 +64,7 @@ function sendMessage({message, volume, name}) {
         })
         .send(JSON.stringify(
             {
-                state: message,
+                state: `${name} says: ${message}`,
                 last_updated: new Date().toISOString(),
                 attributes: {
                     name,
