@@ -1,24 +1,25 @@
 "use strict";
 require('dotenv').config();
-const {HA_URL, HA_TOKEN} = process.env;
+const { HA_URL, HA_TOKEN } = process.env;
 
 const express = require('express');
 const csrf = require('csurf');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const rateLimit = require("express-rate-limit");
+const handlebars = require('express-handlebars');
+const rateLimit = require('express-rate-limit');
+const unirest = require('unirest');
 
 let csrfProtection = csrf({ cookie: true })
 
-let que = [];
-let intervalID;
+let queue = [];
 
 let app = express();
 app.use(rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 100 // limit each IP to 100 requests per windowMs
 }));
-const handlebars = require('express-handlebars');
+
 //Sets our app to use the handlebars engine
 app.set('view engine', 'handlebars');
 
@@ -40,14 +41,11 @@ app.post("/", csrfProtection, (req, res) => {
         return;
     }
     let { message, volume = 5, name = "None Provided" } = req.body;
-    if(message > 255){
-        message = message.slice(0,254);
+    if (message > 255) {
+        message = message.slice(0, 254);
     }
     console.log("Message Recived", message, name, volume);
-    que.push({message, volume, name});
-    
-    
-    
+    queue.push({ message, volume, name });
 });
 
 app.listen(process.env.PORT || 3000, () => {
@@ -55,38 +53,37 @@ app.listen(process.env.PORT || 3000, () => {
 });
 
 
-function sendMessage({message, volume, name}) {
-    try{
-    var unirest = require('unirest');
-    var req = unirest('POST', `${HA_URL}/api/states/sensor.annoying_message`)
-        .headers({
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${HA_TOKEN}`
-        })
-        .send(JSON.stringify(
-            {
-                state: `${name.length > 1 ? name + " says: " : ""}${message}`,
-                last_updated: new Date().toISOString(),
-                attributes: {
-                    name,
-                    volume
+function sendMessage({ message, volume, name, color }) {
+    try {
+        var req = unirest('POST', `${HA_URL}/api/states/sensor.annoying_message`)
+            .headers({
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${HA_TOKEN}`
+            })
+            .send(JSON.stringify(
+                {
+                    state: `${name.length > 0 ? name + " says: " : ""}${message}`,
+                    last_updated: new Date().toISOString(),
+                    attributes: {
+                        name,
+                        volume
+                    }
                 }
-                
-            }
-        ))
-        .end(function (res) {
-            if (res.error) throw new Error(res.error);
-        });
-    }catch(e){
+            ))
+            .end(function (res) {
+                if (res.error) throw new Error(res.error);
+            });
+    } catch (e) {
         console.warn(e.message);
         return;
     }
 }
 
+
 setInterval(() => {
-    if(que.length == 0){
+    if (queue.length == 0) {
         return;
     }
-    sendMessage(que[0]);
-    que.shift();
+    sendMessage(queue[0]);
+    queue.shift();
 }, 10000);
