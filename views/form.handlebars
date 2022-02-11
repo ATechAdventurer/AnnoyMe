@@ -2,23 +2,25 @@
     <div class="card login-form">
         <div class="card-body">
             <h3 class="card-title text-center">Annoy Me</h3>
-            <h5 class="card-subtitle text-center">Type a message and it will be read out loud through my apartment's speakers</h5>
+            <h5 class="card-subtitle text-center">Type a message and it will be read out loud through my apartment's speakers. If I'm not home it will player in my headphones or will be queued </h5>
+            <h6 class="card-subtitle text-center"><a href="https://twitter.com/intent/tweet?screen_name=ATechAdventurer&ref_src=twsrc%5Etfw" class="twitter-mention-button" data-show-count="false">Tweet to @ATechAdventurer</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></h6>
             <div class="card-text">
                 <!--<div class="alert alert-danger alert-dismissible fade show" role="alert">An Error Occured</div>-->
                 <form action="/" method="POST">
                     <div class="form-group">
+                        <label for="inputName">Name / Handle (Optional)</label>
+                        <input type="text" class="form-control form-control-sm" id="inputName" name="name"/>
+                    </div>
+                    <div class="form-group">
                         <label for="inputEmail">Message</label>
-                        <textarea type="textarea" name="message" class="form-control form-control-sm" id="inputEmail"></textarea>
+                        <textarea type="textarea" name="message" class="form-control form-control-sm" id="inputEmail" required></textarea>
                     </div>
                     <div class="form-group">
                         <label for="inputVolume">Volume</label>
                         <input type="range" name="volume" class="custom-range"
                             id="inputVolume" min="1" max="11" />
                     </div>
-                    <div class="form-group">
-                        <label for="inputName">Name (Optional)</label>
-                        <input type="text" class="form-control form-control-sm" id="inputName" name="name"/>
-                    </div>
+                    
                     <input hidden="true" name="_csrf" value="{{csrfToken}}"/>
                     <button type="submit" class="btn btn-primary btn-block">Send the message</button>
                 </form>
